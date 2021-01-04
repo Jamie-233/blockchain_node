@@ -48,7 +48,7 @@ class BlockChain {
     const prevHash = this.getLastBlock().hash
     let timestamp = Date.now()
     let hash = this.computeHash(index, prevHash, timestamp, data, nonce)
-    
+
     while(hash.slice(0, this.difficulty) !== '0'.repeat(this.difficulty)) {
       nonce += 1
       hash = this.computeHash(index, prevHash, timestamp, data, nonce)
@@ -115,10 +115,12 @@ class BlockChain {
   }
 }
 
-const bc = new BlockChain()
-bc.mine()
-bc.blockchain[1].nonce = 22
-bc.mine()
-bc.mine()
+// const bc = new BlockChain()
+// bc.mine()
+// bc.blockchain[1].nonce = 22
+// bc.mine()
+// bc.mine()
+//
+// console.log(bc.blockchain)
 
-console.log(bc.blockchain)
+module.exports = BlockChain
