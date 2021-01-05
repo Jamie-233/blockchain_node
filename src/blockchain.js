@@ -24,23 +24,37 @@ class BlockChain {
     return this.blockchain[this.blockchain.length-1]
   }
 
-  // 挖矿
-  mine() {
-    // 1 生成新区块 一页新的账本加入区块链
-    // 2 不停的算hash 直到符合难道 获得记账权
+  transfer(from, to, amount) {
+    const transObj = {from, to, amount}
+    this.data.push(transObj)
+    return this.data
+  }
 
+  // 查看余额
+  blance() {
+    
+  }
+
+  // 打包交易
+  mine(address) {
+    // 1 生成新区块 & 上链
+    // 2 计算hash 符合难度 获得记账权
+
+    // 挖矿成功奖励 100
+    this.transfer('0', address, 100)
     const newBlock = this.generateNewBlock()
 
-    // 区块合法 并且区块链合法 新增区块
+    // 区块合法并且区块链合法 新增区块
     if(this.isVaildBlock(newBlock) && this.isValidChain()) {
       this.blockchain.push(newBlock)
+      this.data = []
     }
     else {
       console.log('Error Invaild Block')
     }
   }
 
-  // 生成新区块
+  // generate new block
   generateNewBlock() {
     let nonce = 0
     const index = this.blockchain.length
@@ -68,7 +82,7 @@ class BlockChain {
     return this.computeHash(index, prevHash, timestamp, data, nonce)
   }
 
-  // 计算 hash
+  // compute hash
   computeHash(index, prevHash, timestamp, data, nonce) {
     return crypto
             .createHash('sha256')
@@ -76,13 +90,13 @@ class BlockChain {
             .digest('hex')
   }
 
-  // 校验区块
+  // verify block
   isVaildBlock(newBlock, lastBlock=this.getLastBlock()) {
     // 1. 区块的index = 最新区块的 index + 1
     // 2. 区块的time 大于最新的区块
-    // 3. 最新区块的prevHash 等于lastBlock区块的hash
-    // 4. 区块的哈希值 难度符合要求
-    // 5. 新区块hash计算正确
+    // 3. 最新区块的 prevHash 等于lastBlock区块的hash
+    // 4. 区块 哈希值 符合要求
+    // 5. 新区块 hash 计算正确
     if(newBlock.index !== lastBlock.index+1) {
       return false
     }

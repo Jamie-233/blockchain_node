@@ -2,20 +2,7 @@ const vorpal = require('vorpal')()
 const Table = require('cli-table')
 const Blockchain = require('./blockchain')
 
-// instantiate
-// const table = new Table({
-//     head: ['TH 1 label', 'TH 2 label'],
-//     colWidths: [10, 20]
-// });
-
-// table is an Array, so you can `push`, `unshift`, `splice` and friends
-// table.push(
-//     ['First value', 'Second value'],
-//     ['First value', 'Second value']
-// );
-
 function formatLog(data) {
-  console.log(data)
   if(!Array(data)) {
     data = [data]
   }
@@ -24,26 +11,40 @@ function formatLog(data) {
   const table = new Table({
       head,
       colWidths: new Array(head.length).fill(20)
-  });
+  })
   const res = data.map(v => {
-    return head.map(h=> v[h])
+    return head.map(h => JSON.stringify(v[h], null, 1))
   })
 
-  table.push(...res);
-  console.log(table.toString());
+  table.push(...res)
+  console.log(table.toString())
 }
-
-// table.push(
-//     ['First value', 'Second value'],
-//     ['First value', 'Second value']
-// );
 
 const blockchain = new Blockchain()
 
 vorpal
-  .command('mine', '挖矿')
+  .command('trans <from> <to> <amount>', 'transfer')
   .action(function(args, callback) {
-    const newBlock = blockchain.mine()
+    const {from, to, amount} = args
+    let trans = blockchain.transfer(from, to, amount)
+    formatLog(trans)
+    callback()
+  })
+
+vorpal
+  .command('detail <index>', 'view blockchain')
+  .action(function(args, callback) {
+    const { index } = args
+    const block = blockchain.blockchain[index]
+    this.log(JSON.stringify(block, null, 2))
+    callback()
+  })
+
+vorpal
+  .command('mine <address>', 'mine')
+  .action(function(args, callback) {
+    const { address } = args
+    const newBlock = blockchain.mine(address)
     if(newBlock) {
       formatLog(newBlock)
     }
@@ -51,27 +52,21 @@ vorpal
   })
 
 vorpal
-  .command('chain', '查看区块链')
+  .command('chain', 'view the blockchain')
   .action(function(args, callback) {
     formatLog(blockchain.blockchain)
     callback()
   })
 
 vorpal
-  .command('hello', '你好')
+  .command('hello', 'hello')
   .action(function(args, callback) {
     this.log('hello blockchain')
     callback()
   })
 
-// vorpal
-//   .command('hello', '你好')
-//   .action(function(args, callback) {
-//     this.log('hello blockchain')
-//     callback()
-//   })
-
 console.log('Welcome to the blockchain world')
+
 vorpal.exec('help')
 
 vorpal
