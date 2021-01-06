@@ -25,14 +25,32 @@ class BlockChain {
   }
 
   transfer(from, to, amount) {
+    // if(from !== '0') {}
     const transObj = {from, to, amount}
     this.data.push(transObj)
     return this.data
   }
 
   // 查看余额
-  blance() {
-    
+  blance(address) {
+    // from to amount
+    let blance = 0
+    this.blockchain.forEach((block) => {
+      if(!Array.isArray(block.data)) {
+        // 创世区块
+        return
+      }
+      block.data.forEach(trans => {
+        if(address === trans.from) {
+          blance -= trans.amount
+        }
+        if(address === trans.to) {
+          blance += trans.amount
+        }
+      })
+    })
+    console.log(blance);
+    return blance
   }
 
   // 打包交易

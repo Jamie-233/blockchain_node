@@ -32,6 +32,16 @@ vorpal
   })
 
 vorpal
+  .command('blance <address>', 'blance')
+  .action(function(args, callback) {
+    const blance = blockchain.blance(args.address)
+    if(blance) {
+      formatLog({blance, address: args.address})
+    }
+    callback()
+  })
+
+vorpal
   .command('detail <index>', 'view blockchain')
   .action(function(args, callback) {
     const { index } = args
