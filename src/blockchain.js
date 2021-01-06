@@ -25,7 +25,15 @@ class BlockChain {
   }
 
   transfer(from, to, amount) {
-    // if(from !== '0') {}
+    if(from !== '0') {
+      // 交易非挖矿
+      const blance = this.blance(from)
+      if(blance < amount) {
+        console.log('not enough blance', from, blance, amount)
+        return
+      }
+    }
+
     const transObj = {from, to, amount}
     this.data.push(transObj)
     return this.data
@@ -41,10 +49,10 @@ class BlockChain {
         return
       }
       block.data.forEach(trans => {
-        if(address === trans.from) {
+        if(address == trans.from) {
           blance -= trans.amount
         }
-        if(address === trans.to) {
+        if(address == trans.to) {
           blance += trans.amount
         }
       })

@@ -3,7 +3,7 @@ const Table = require('cli-table')
 const Blockchain = require('./blockchain')
 
 function formatLog(data) {
-  if(!Array(data)) {
+  if(!Array.isArray(data)) {
     data = [data]
   }
   const first = data[0]
@@ -27,7 +27,9 @@ vorpal
   .action(function(args, callback) {
     const {from, to, amount} = args
     let trans = blockchain.transfer(from, to, amount)
-    formatLog(trans)
+    if(trans) {
+      formatLog(trans)
+    }
     callback()
   })
 
@@ -37,6 +39,9 @@ vorpal
     const blance = blockchain.blance(args.address)
     if(blance) {
       formatLog({blance, address: args.address})
+    }
+    else {
+
     }
     callback()
   })
