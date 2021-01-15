@@ -24,6 +24,7 @@ const port = Number(process.argv[3])
 if(port && host) {
   send('NB', port, host)
 }
+
 upd.bind(8002)
 
 console.log(process.argv)

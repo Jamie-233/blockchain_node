@@ -1,5 +1,6 @@
 const crypto = require('crypto')
-
+const dgram = require('dgram')
+const rsa = require('./rsa')
 const initBlock = {
   index: 0,
   data: 'hello blockchain',
@@ -17,6 +18,11 @@ class BlockChain {
     ]
     this.data = []
     this.difficulty = 4
+    // 所有的网络节点信息 address port
+    this.peers = []
+    // 种子节点
+    this.seed = {port: 8001, address: 'localhost'}
+    this.upd = dgram.createSocket('udp4')
   }
 
   // 最新区块
